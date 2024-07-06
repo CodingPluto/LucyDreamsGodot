@@ -1,0 +1,19 @@
+[gd_scene load_steps=5 format=3 uid="uid://b4865m08oemcl"]
+
+[ext_resource type="PackedScene" uid="uid://bupj7op8ubd3c" path="res://Lucy.tscn" id="1_mwo07"]
+[ext_resource type="PackedScene" uid="uid://c6gslu0f4q3h4" path="res://Platforms.tscn" id="2_dyi38"]
+[ext_resource type="PackedScene" uid="uid://de53vthmskh3f" path="res://background.tscn" id="3_per4w"]
+[ext_resource type="PackedScene" uid="uid://c2d1avnx3ncs7" path="res://BasePlatform.tscn" id="4_ms3k2"]
+
+[node name="main" type="Node2D"]
+
+[node name="Background" parent="." instance=ExtResource("3_per4w")]
+position = Vector2(0, 0)
+scale = Vector2(4, 4)
+
+[node name="Lucy" parent="." instance=ExtResource("1_mwo07")]
+
+[node name="Platforms" parent="." instance=ExtResource("2_dyi38")]
+
+[node name="BasePlatform" parent="." instance=ExtResource("4_ms3k2")]
+position = Vector2(300, 515)

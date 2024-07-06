@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://c2d1avnx3ncs7"]
+
+[ext_resource type="Texture2D" uid="uid://42a4unai63bc" path="res://assets/images/basePlatform.png" id="1_74uaw"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lprxk"]
+size = Vector2(1080, 11)
+
+[node name="BasePlatform" type="StaticBody2D"]
+scale = Vector2(3, 3)
+collision_layer = 16
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("1_74uaw")
+
+[node name="Hitbox" type="CollisionShape2D" parent="."]
+position = Vector2(0, -0.5)
+shape = SubResource("RectangleShape2D_lprxk")

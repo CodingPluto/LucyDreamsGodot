@@ -1,0 +1,216 @@
+[gd_scene load_steps=43 format=3 uid="uid://bupj7op8ubd3c"]
+
+[ext_resource type="Script" path="res://Lucy.cs" id="1_epbrl"]
+[ext_resource type="Texture2D" uid="uid://dxd8mm7jectxv" path="res://assets/images/lucyAnimations/lucy_die/sprite_0.png" id="2_82vjm"]
+[ext_resource type="Texture2D" uid="uid://ce51lc3q50k2u" path="res://assets/images/lucyAnimations/lucy_idle/sprite_0.png" id="2_xh1q3"]
+[ext_resource type="Texture2D" uid="uid://tthwhug0nyef" path="res://assets/images/lucyAnimations/lucy_die/sprite_1.png" id="3_cmj3u"]
+[ext_resource type="Texture2D" uid="uid://djb3f7booux7o" path="res://assets/images/lucyAnimations/lucy_die/sprite_2.png" id="4_a0oam"]
+[ext_resource type="Texture2D" uid="uid://ouaqs38s1mv6" path="res://assets/images/lucyAnimations/lucy_die/sprite_3.png" id="5_nco3o"]
+[ext_resource type="Texture2D" uid="uid://c0bq31k7hjpaw" path="res://assets/images/lucyAnimations/lucy_die/sprite_4.png" id="6_i4852"]
+[ext_resource type="Texture2D" uid="uid://vglts1elynu3" path="res://assets/images/lucyAnimations/lucy_die/sprite_5.png" id="7_0apw7"]
+[ext_resource type="Texture2D" uid="uid://dol5e0drdaof2" path="res://assets/images/lucyAnimations/lucy_die/sprite_6.png" id="8_1xmnj"]
+[ext_resource type="Texture2D" uid="uid://bgavgs368uss5" path="res://assets/images/lucyAnimations/lucy_die/sprite_7.png" id="9_diiel"]
+[ext_resource type="Texture2D" uid="uid://bpp8ioeybfhxj" path="res://assets/images/lucyAnimations/lucy_fall/sprite_0.png" id="10_6a1my"]
+[ext_resource type="Texture2D" uid="uid://5v7jita1colx" path="res://assets/images/lucyAnimations/lucy_fall/sprite_1.png" id="11_mrw6i"]
+[ext_resource type="Texture2D" uid="uid://clrpi6ticmhh4" path="res://assets/images/lucyAnimations/lucy_fall/sprite_2.png" id="12_lee1o"]
+[ext_resource type="Texture2D" uid="uid://byme3j4eok1d1" path="res://assets/images/lucyAnimations/lucy_fall/sprite_3.png" id="13_dtsal"]
+[ext_resource type="Texture2D" uid="uid://dsrk4v5lklkl" path="res://assets/images/lucyAnimations/lucy_idle/sprite_1.png" id="15_4n77l"]
+[ext_resource type="Texture2D" uid="uid://dxgsqyemff72t" path="res://assets/images/lucyAnimations/lucy_idle/sprite_2.png" id="16_7rt7m"]
+[ext_resource type="Texture2D" uid="uid://bopebj1fw134n" path="res://assets/images/lucyAnimations/lucy_idle/sprite_3.png" id="17_qxnbr"]
+[ext_resource type="Texture2D" uid="uid://biv8m1hdc3pg0" path="res://assets/images/lucyAnimations/lucy_idle/sprite_4.png" id="18_kfydu"]
+[ext_resource type="Texture2D" uid="uid://ba2pmt4tvg03t" path="res://assets/images/lucyAnimations/lucy_idle/sprite_5.png" id="19_j8in8"]
+[ext_resource type="Texture2D" uid="uid://brl3h52lqyu8r" path="res://assets/images/lucyAnimations/lucy_idle/sprite_6.png" id="20_7ecqj"]
+[ext_resource type="Texture2D" uid="uid://db61ec04od1ea" path="res://assets/images/lucyAnimations/lucy_idle/sprite_7.png" id="21_nuegu"]
+[ext_resource type="Texture2D" uid="uid://7h7xs03fnd4k" path="res://assets/images/lucyAnimations/lucy_idle/sprite_8.png" id="22_qt5fx"]
+[ext_resource type="Texture2D" uid="uid://bvw0maj6bdq6l" path="res://assets/images/lucyAnimations/lucy_jump/sprite_0.png" id="23_llq1i"]
+[ext_resource type="Texture2D" uid="uid://bxgjflf3vivnw" path="res://assets/images/lucyAnimations/lucy_jump/sprite_1.png" id="24_k1rem"]
+[ext_resource type="Texture2D" uid="uid://ce7wmo5q4nlj1" path="res://assets/images/lucyAnimations/lucy_jump/sprite_2.png" id="25_u0hp3"]
+[ext_resource type="Texture2D" uid="uid://bkq43wge3a574" path="res://assets/images/lucyAnimations/lucy_jump/sprite_3.png" id="26_54pef"]
+[ext_resource type="Texture2D" uid="uid://qgu037w40mgn" path="res://assets/images/lucyAnimations/lucy_jump/sprite_4.png" id="27_n0w7h"]
+[ext_resource type="Texture2D" uid="uid://carfbkn3o7j6x" path="res://assets/images/lucyAnimations/lucy_jump/sprite_5.png" id="28_lpo5w"]
+[ext_resource type="Texture2D" uid="uid://dlglce5uj28lv" path="res://assets/images/lucyAnimations/lucy_jump/sprite_6.png" id="29_fvj58"]
+[ext_resource type="Texture2D" uid="uid://bskaw5hlbdepc" path="res://assets/images/lucyAnimations/lucy_jump/sprite_7.png" id="30_ugpaq"]
+[ext_resource type="Texture2D" uid="uid://bpxve61dnvv1b" path="res://assets/images/lucyAnimations/lucy_jump/sprite_8.png" id="31_lha1i"]
+[ext_resource type="Texture2D" uid="uid://c5kb26fmixtq8" path="res://assets/images/lucyAnimations/lucy_running/sprite_0.png" id="32_3ay7l"]
+[ext_resource type="Texture2D" uid="uid://54s61xo2vkie" path="res://assets/images/lucyAnimations/lucy_running/sprite_1.png" id="33_klod5"]
+[ext_resource type="Texture2D" uid="uid://dm6phbhd6mylq" path="res://assets/images/lucyAnimations/lucy_running/sprite_2.png" id="34_lmbhd"]
+[ext_resource type="Texture2D" uid="uid://bo0u6jyk1gw1v" path="res://assets/images/lucyAnimations/lucy_running/sprite_3.png" id="35_wrm5e"]
+[ext_resource type="Texture2D" uid="uid://dexh8pbq4tn4g" path="res://assets/images/lucyAnimations/lucy_running/sprite_4.png" id="36_arixj"]
+[ext_resource type="Texture2D" uid="uid://dvqs0s3s8aukh" path="res://assets/images/lucyAnimations/lucy_running/sprite_5.png" id="37_568dj"]
+[ext_resource type="Texture2D" uid="uid://c6mob168utlov" path="res://assets/images/lucyAnimations/lucy_running/sprite_6.png" id="38_hhlww"]
+[ext_resource type="Texture2D" uid="uid://bsm3ugr5v1s02" path="res://assets/images/lucyAnimations/lucy_running/sprite_7.png" id="39_gv3xs"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_thcv2"]
+size = Vector2(6.8, 20)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_wuk27"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_82vjm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_cmj3u")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_a0oam")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_nco3o")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_i4852")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_0apw7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_1xmnj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_diiel")
+}],
+"loop": false,
+"name": &"die",
+"speed": 16.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("10_6a1my")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_mrw6i")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_lee1o")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_dtsal")
+}],
+"loop": true,
+"name": &"falling",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_xh1q3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_4n77l")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_7rt7m")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_qxnbr")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_kfydu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_j8in8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_7ecqj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_nuegu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_qt5fx")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 4.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("23_llq1i")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_k1rem")
+}, {
+"duration": 1.0,
+"texture": ExtResource("25_u0hp3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("26_54pef")
+}, {
+"duration": 1.0,
+"texture": ExtResource("27_n0w7h")
+}, {
+"duration": 1.0,
+"texture": ExtResource("28_lpo5w")
+}, {
+"duration": 1.0,
+"texture": ExtResource("29_fvj58")
+}, {
+"duration": 1.0,
+"texture": ExtResource("30_ugpaq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("31_lha1i")
+}],
+"loop": true,
+"name": &"jumping",
+"speed": 17.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("32_3ay7l")
+}, {
+"duration": 1.0,
+"texture": ExtResource("33_klod5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("34_lmbhd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("35_wrm5e")
+}, {
+"duration": 1.0,
+"texture": ExtResource("36_arixj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("37_568dj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("38_hhlww")
+}, {
+"duration": 1.0,
+"texture": ExtResource("39_gv3xs")
+}],
+"loop": true,
+"name": &"running",
+"speed": 7.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_sh6h7"]
+size = Vector2(6.66667, 4.66667)
+
+[node name="Lucy" type="CharacterBody2D"]
+scale = Vector2(3, 3)
+collision_mask = 62
+script = ExtResource("1_epbrl")
+
+[node name="Hitbox" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_thcv2")
+
+[node name="Sprite" type="AnimatedSprite2D" parent="."]
+z_index = 5
+sprite_frames = SubResource("SpriteFrames_wuk27")
+animation = &"die"
+offset = Vector2(-0.333, -1)
+
+[node name="Camera" type="Camera2D" parent="."]
+position_smoothing_enabled = true
+editor_draw_limits = true
+
+[node name="Interactbox" type="Area2D" parent="."]
+collision_mask = 62
+
+[node name="Hitbox" type="CollisionShape2D" parent="Interactbox"]
+position = Vector2(-1.58946e-07, 7.66667)
+shape = SubResource("RectangleShape2D_sh6h7")
+
+[connection signal="area_entered" from="Interactbox" to="." method="OnAreaEntered"]

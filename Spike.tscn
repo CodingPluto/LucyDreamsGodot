@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3 uid="uid://d84d5stidv2c"]
+
+[ext_resource type="PackedScene" uid="uid://cs453ohy2paeb" path="res://PlatformItem.tscn" id="1_8agsu"]
+[ext_resource type="Texture2D" uid="uid://cfcf06a0nqun2" path="res://assets/spike.png" id="2_b7nh3"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fmabg"]
+size = Vector2(8.5625, 4.33333)
+
+[node name="Spike" instance=ExtResource("1_8agsu")]
+collision_layer = 2
+
+[node name="Sprite" parent="." index="0"]
+texture = ExtResource("2_b7nh3")
+
+[node name="Hitbox" parent="." index="1"]
+position = Vector2(0, 3.66667)
+shape = SubResource("RectangleShape2D_fmabg")

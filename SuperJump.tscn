@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3 uid="uid://crq6vdv5r2fg3"]
+
+[ext_resource type="PackedScene" uid="uid://cs453ohy2paeb" path="res://PlatformItem.tscn" id="1_iocjp"]
+[ext_resource type="Texture2D" uid="uid://coql68yijvguo" path="res://assets/superJump.png" id="2_gm76n"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_oqfmj"]
+size = Vector2(12, 12)
+
+[node name="SuperJump" instance=ExtResource("1_iocjp")]
+collision_layer = 32
+collision_mask = 0
+
+[node name="Sprite" parent="." index="0"]
+texture = ExtResource("2_gm76n")
+
+[node name="Hitbox" parent="." index="1"]
+shape = SubResource("RectangleShape2D_oqfmj")
