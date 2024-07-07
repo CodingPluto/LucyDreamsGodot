@@ -2,14 +2,13 @@ using Godot;
 using System;
 using System.Numerics;
 using System.Reflection.Metadata;
-using System.Diagnostics; 
+using System.Diagnostics;
 
 
 public partial class Lucy : CharacterBody2D
 {
     static readonly float Speed;
     static readonly float JumpVelocity;
-    static readonly int CoyoteFrames;
     static readonly int DeathFrames;
     static readonly float Gravity;
     bool _isAlive;
@@ -37,7 +36,6 @@ public partial class Lucy : CharacterBody2D
     {
         Speed = 300.0f;
         JumpVelocity = -800.0f;
-        CoyoteFrames = 60;
         DeathFrames = 40;
         Gravity = ProjectSettings.GetSetting("physics/2d/default_gravity").AsSingle();
     }
@@ -52,7 +50,7 @@ public partial class Lucy : CharacterBody2D
         _isSuperJumping = false;
         _coyoteFrameCount = 0;
     }
-    
+
     public override void _Ready()
     {
         Position = new Godot.Vector2(0, 0);
@@ -186,18 +184,17 @@ public partial class Lucy : CharacterBody2D
     private void PhysicsCloudInteraction(ref double delta)
     {
         float widthAdjustment = _hitbox.Shape.GetRect().Size.X * Scale.X / 2;
-        float platformWidthAdjustment = _currentPlatform.spriteWidth / 2;
+        float platformWidthAdjustment = _currentPlatform.SpriteWidth / 2;
         _bufferVelocity.Y = 0;
-        float newPositionX = _bufferPosition.X + _currentPlatform.velocity.X;
-        float newPositionY = _currentPlatform.Position.Y - _currentPlatform.spriteHeight / 2 - _hitbox.Shape.GetRect().Size.Y * Scale.Y / 2;
+        float newPositionX = _bufferPosition.X + _currentPlatform.Velocity.X;
+        float newPositionY = _currentPlatform.Position.Y - _currentPlatform.SpriteHeight / 2 - _hitbox.Shape.GetRect().Size.Y * Scale.Y / 2;
         _bufferPosition = new Godot.Vector2(newPositionX, newPositionY);
         bool withinXBounds = (_bufferPosition.X + widthAdjustment > _currentPlatform.Position.X - platformWidthAdjustment)
         && (_bufferPosition.X - widthAdjustment < _currentPlatform.Position.X + platformWidthAdjustment);
         if (!withinXBounds)
         {
             _physicsState = PhysicsState.GENERAL_INTERACTION;
-            _currentPlatform.ResetZIndex();
-            _currentPlatform.interactingWithPlayer = false;
+            _currentPlatform.InteractingWithPlayer = false;
         }
 
     }
@@ -222,8 +219,7 @@ public partial class Lucy : CharacterBody2D
                 { // Identifying collider
                     _currentPlatform = (Platform)baseNode;
                     _physicsState = PhysicsState.CLOUD_INTERACTION;
-                    _currentPlatform.BringToFront();
-                    _currentPlatform.interactingWithPlayer = true;
+                    _currentPlatform.InteractingWithPlayer = true;
                 }
             }
         }
