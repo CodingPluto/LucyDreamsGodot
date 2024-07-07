@@ -2,233 +2,261 @@ using Godot;
 using System;
 using System.Numerics;
 using System.Reflection.Metadata;
+using System.Diagnostics; 
+
 
 public partial class Lucy : CharacterBody2D
 {
-	public const float Speed = 300.0f;
-	public const float JumpVelocity = -800.0f;
+    static readonly float Speed;
+    static readonly float JumpVelocity;
+    static readonly int CoyoteFrames;
+    static readonly int DeathFrames;
+    static readonly float Gravity;
+    bool _isAlive;
+    bool _isSuperJumping;
+    bool _hasSuperJumped;
+    int _deathFrameCount;
+    int _coyoteFrameCount;
+    bool _coyoteTime;
+    Platform _currentPlatform;
+    AnimatedSprite2D _sprite;
+    CollisionShape2D _hitbox;
+    Camera2D _camera;
+    bool _hasJumped;
+    bool _isJumping;
+    bool _isRunning;
+    Godot.Vector2 _bufferPosition;
+    Godot.Vector2 _bufferVelocity;
+    private PhysicsState _physicsState;
+    enum PhysicsState
+    {
+        CLOUD_INTERACTION, GENERAL_INTERACTION, NO_PHYSICS
+    }
 
-
-	private const int COYOTE_FRAMES = 60;
-
-	private bool isAlive = true;
-	private bool isSuperJumping = false;
-	private bool hasSuperJumped = false;
-	private const int DEATH_FRAMES = 20;
-	private int deathFrameCount = 0;
-	int coyoteFrameCount = 0;
-	bool coyoteTime = false;
-
-
-	private Platform currentPlatform;
-	private AnimatedSprite2D sprite; 
-	private CollisionShape2D hitbox;
-	private Camera2D camera;
-
-	public float gravity = ProjectSettings.GetSetting("physics/2d/default_gravity").AsSingle();
-
-	public override void _Ready()
-	{
-		Position = new Godot.Vector2(0,0);
-		ZIndex = 10;
-		sprite = GetNode<AnimatedSprite2D>("Sprite");	
-		hitbox = GetNode<CollisionShape2D>("Hitbox");
-		camera = GetNode<Camera2D>("Camera");
-		camera.LimitRight = (int) GetViewportRect().Size.X / 2;
-		camera.LimitLeft = -camera.LimitRight;
-		camera.LimitBottom = (int) GetViewportRect().Size.Y / 2;
-		physicsState = PhysicsState.GENERAL_INTERACTION;
-	}
-
-	public void OnAreaEntered(Area2D area)
-	{
-		GD.Print("Area Name: ",area.Name);
-		if (area.Name.ToString().Substring(0,5) == "Super")
-		{
-			hasSuperJumped = true;
-		}
-		else if (!isSuperJumping)
-		{
-			isAlive = false;
-		}
-	}
-	private void Die(){
-		if (deathFrameCount == 0)
-		{
-			physicsState = PhysicsState.NO_PHYSICS;
-			Velocity = new Godot.Vector2(0,0);
-			sprite.Play("die");
-		}
-		if (deathFrameCount > DEATH_FRAMES){
-			Position = new Godot.Vector2(0, 0);
-			Velocity = new Godot.Vector2(0,0);
-			isAlive = true;
-			deathFrameCount = 0;
-			physicsState = PhysicsState.GENERAL_INTERACTION;
-			return;
-		}
-		deathFrameCount++;
-	}
+    static Lucy()
+    {
+        Speed = 300.0f;
+        JumpVelocity = -800.0f;
+        CoyoteFrames = 60;
+        DeathFrames = 40;
+        Gravity = ProjectSettings.GetSetting("physics/2d/default_gravity").AsSingle();
+    }
+    Lucy()
+    {
+        _isAlive = true;
+        _deathFrameCount = 0;
+        _isRunning = false;
+        _hasJumped = false;
+        _isJumping = false;
+        _hasSuperJumped = false;
+        _isSuperJumping = false;
+        _coyoteFrameCount = 0;
+    }
+    
+    public override void _Ready()
+    {
+        Position = new Godot.Vector2(0, 0);
+        ZIndex = 10;
+        _sprite = GetNode<AnimatedSprite2D>("Sprite");
+        Debug.Assert(_sprite != null);
+        _hitbox = GetNode<CollisionShape2D>("Hitbox");
+        Debug.Assert(_hitbox != null);
+        _camera = GetNode<Camera2D>("Camera");
+        Debug.Assert(_camera != null);
+        _camera.LimitRight = (int)GetViewportRect().Size.X / 2;
+        _camera.LimitLeft = -_camera.LimitRight;
+        _camera.LimitBottom = (int)GetViewportRect().Size.Y / 2;
+        _physicsState = PhysicsState.GENERAL_INTERACTION;
+    }
     public override void _Process(double delta)
     {
         base._Process(delta);
-		if (!isAlive)
-		{
-			Die();
-		}
+        if (!_isAlive)
+        {
+            Die();
+        }
 
-		if (Input.IsActionJustPressed("Exit"))
-		{
-			GetTree().Quit();
-		}
+        if (Input.IsActionJustPressed("Exit"))
+        {
+            GetTree().Quit();
+        }
     }
-
-	private bool hasJumped = false;
-	private bool isJumping = false;
-	private bool isRunning = false;
-	private Godot.Vector2 position;
-	enum PhysicsState
-	{
-		CLOUD_INTERACTION,
-		GENERAL_INTERACTION,
-		NO_PHYSICS
-	}
-	private PhysicsState physicsState;
-
-	private bool HasPlatformInteraction(){
-		return (IsOnFloor() || physicsState == PhysicsState.CLOUD_INTERACTION);
-	}
-	private void PollJump(ref Godot.Vector2 velocity, ref double delta){
-		if ((Input.IsActionPressed("lucy_up")) || hasSuperJumped){
-			sprite.Play("jumping");
-			velocity.Y = JumpVelocity;
-			hasJumped = true;
-			isJumping = true;
-			physicsState = PhysicsState.GENERAL_INTERACTION;
-		}
-		if (HasPlatformInteraction() && hasJumped){
-			hasJumped = false;
-		}
-		if (hasSuperJumped){
-			isSuperJumping = true;
-			velocity.Y *= 2.5f;
-			hasSuperJumped = false;
-		}
-	}
-	private void PhysicsCloudInteraction(ref Godot.Vector2 velocity, ref double delta){
-		float widthAdjustment = hitbox.Shape.GetRect().Size.X * Scale.X / 2;
-		float platformWidthAdjustment = currentPlatform.spriteWidth / 2;
-		velocity.Y = 0;
-		position = new Godot.Vector2(position.X + currentPlatform.velocity.X, (currentPlatform.Position.Y - currentPlatform.spriteHeight / 2) - ((hitbox.Shape.GetRect().Size.Y) * Scale.Y / 2));
-		bool withinXBounds = (position.X + widthAdjustment > currentPlatform.Position.X - platformWidthAdjustment)
-		&& (position.X - widthAdjustment < currentPlatform.Position.X + platformWidthAdjustment);
-		if (!withinXBounds){
-			//GD.Print("Not within X Bounds");
-			physicsState = PhysicsState.GENERAL_INTERACTION;
-			currentPlatform.ResetZIndex();
-			currentPlatform.interactingWithPlayer = false;
-		}
-		
-	}
-	private void GeneralPlatformInteraction(ref Godot.Vector2 velocity, ref double delta){
-		isJumping = false;
-		if (!IsOnFloor()){
-			velocity.Y += gravity * (float)delta;
-		}
-		else{
-			coyoteFrameCount = 0;
-			velocity.Y = 0;
-			for (int i = 0; i < GetSlideCollisionCount(); i++){
-				KinematicCollision2D collision = GetSlideCollision(i);
-				Node baseNode = (Node)collision.GetCollider();
-				int ID = 0;
-				bool isNumber = int.TryParse(baseNode.Name.ToString(), out ID);
-				if (isNumber){ // Identifying collider
-					currentPlatform = (Platform)baseNode;
-					physicsState = PhysicsState.CLOUD_INTERACTION;
-					currentPlatform.BringToFront();
-					currentPlatform.interactingWithPlayer = true;
-				}
-				//GD.Print("Lucy Collided with Platform: ", baseNode.Name.ToString());
-				}
-		}
-	}
-
     public override void _PhysicsProcess(double delta)
-	{
-		Godot.Vector2 velocity = Velocity;
-		position = Position;
-		//GD.Print("PhysicsState: ", physicsState);
-		if (isSuperJumping && velocity.Y > 0){
-			isSuperJumping = false;
-		}
-		switch(physicsState)
-		{
-			case PhysicsState.CLOUD_INTERACTION:
-				PhysicsCloudInteraction(ref velocity,ref delta);
-				break;
-			case PhysicsState.GENERAL_INTERACTION:
-				GeneralPlatformInteraction(ref velocity,ref delta);
-				break;
-			case PhysicsState.NO_PHYSICS:
-				return;
-			default:
-				GD.Print("This isn't supposed to trigger!");
-				break;
-		}
-		PollJump(ref velocity, ref delta);
-		Godot.Vector2 direction = Input.GetVector("lucy_left", "lucy_right", "lucy_up", "lucy_down");
-		if (direction != Godot.Vector2.Zero)
-		{
-			velocity.X = direction.X * Speed;
-			isRunning = true;
-		}
-		else
-		{
-			velocity.X = Mathf.MoveToward(Velocity.X, 0, Speed / 30);
-			isRunning = false;
-		}
+    {
+        _bufferVelocity = Velocity;
+        _bufferPosition = Position;
+        if (_isSuperJumping && _bufferVelocity.Y > 0)
+        {
+            _isSuperJumping = false;
+        }
+        switch (_physicsState)
+        {
+            case PhysicsState.CLOUD_INTERACTION:
+                PhysicsCloudInteraction(ref delta);
+                break;
+            case PhysicsState.GENERAL_INTERACTION:
+                GeneralPlatformInteraction(ref delta);
+                break;
+            case PhysicsState.NO_PHYSICS:
+                return;
+            default:
+                GD.Print("This isn't supposed to trigger!");
+                break;
+        }
+        PollJump(ref delta);
+        Godot.Vector2 direction = Input.GetVector("lucy_left", "lucy_right", "lucy_up", "lucy_down");
+        if (direction != Godot.Vector2.Zero)
+        {
+            _bufferVelocity.X = direction.X * Speed;
+            _isRunning = true;
+        }
+        else
+        {
+            _bufferVelocity.X = Mathf.MoveToward(Velocity.X, 0, Speed / 30);
+            _isRunning = false;
+        }
+        if (direction.X > 0)
+        {
+            _sprite.FlipH = false;
+        }
+        else if (direction.X < 0)
+        {
+            _sprite.FlipH = true;
+        }
+        if (_isJumping)
+        {
+            _sprite.Play("jumping");
+        }
+        else if (Velocity.Y >= 0)
+        {
+            if (Math.Abs(_bufferVelocity.X) > 50 && HasPlatformInteraction())
+            {
+                _sprite.Play("running");
+            }
+            else if (HasPlatformInteraction())
+            {
+                _sprite.Play("idle");
+            }
+            else if (!_hasJumped || (_hasJumped && _bufferVelocity.Y > 850))
+            {
+                _sprite.Play("falling");
+            }
+        }
+        Position = _bufferPosition;
+        Velocity = _bufferVelocity;
+        MoveAndSlide();
+        float leftBound = -GetViewportRect().Size.X / 2 + (_hitbox.Shape.GetRect().Size.X) * Scale.X;
+        float rightBound = GetViewportRect().Size.X / 2 - (_hitbox.Shape.GetRect().Size.X) * Scale.X;
+        _bufferPosition = Position;
+        if (_bufferPosition.X > rightBound)
+        {
+            _bufferPosition.X = rightBound;
+        }
+        else if (_bufferPosition.X < leftBound)
+        {
+            _bufferPosition.X = leftBound;
+        }
+        Position = _bufferPosition;
+    }
+    private bool HasPlatformInteraction()
+    {
+        return IsOnFloor() || _physicsState == PhysicsState.CLOUD_INTERACTION;
+    }
+    private void PollJump(ref double delta)
+    {
+        if (Input.IsActionPressed("lucy_up") || _hasSuperJumped)
+        {
+            _sprite.Play("jumping");
+            _bufferVelocity.Y = JumpVelocity;
+            _hasJumped = true;
+            _isJumping = true;
+            _physicsState = PhysicsState.GENERAL_INTERACTION;
+        }
+        if (HasPlatformInteraction() && _hasJumped)
+        {
+            _hasJumped = false;
+        }
+        if (_hasSuperJumped)
+        {
+            _isSuperJumping = true;
+            _bufferVelocity.Y *= 2.5f;
+            _hasSuperJumped = false;
+        }
+    }
+    private void PhysicsCloudInteraction(ref double delta)
+    {
+        float widthAdjustment = _hitbox.Shape.GetRect().Size.X * Scale.X / 2;
+        float platformWidthAdjustment = _currentPlatform.spriteWidth / 2;
+        _bufferVelocity.Y = 0;
+        float newPositionX = _bufferPosition.X + _currentPlatform.velocity.X;
+        float newPositionY = _currentPlatform.Position.Y - _currentPlatform.spriteHeight / 2 - _hitbox.Shape.GetRect().Size.Y * Scale.Y / 2;
+        _bufferPosition = new Godot.Vector2(newPositionX, newPositionY);
+        bool withinXBounds = (_bufferPosition.X + widthAdjustment > _currentPlatform.Position.X - platformWidthAdjustment)
+        && (_bufferPosition.X - widthAdjustment < _currentPlatform.Position.X + platformWidthAdjustment);
+        if (!withinXBounds)
+        {
+            _physicsState = PhysicsState.GENERAL_INTERACTION;
+            _currentPlatform.ResetZIndex();
+            _currentPlatform.interactingWithPlayer = false;
+        }
 
-
-		if (direction.X > 0){
-			sprite.FlipH = false;
-		}
-		else if (direction.X < 0){
-			sprite.FlipH = true;
-		}
-		if (isJumping){
-			sprite.Play("jumping");
-		}
-		else if (Velocity.Y >= 0){
-			if (Math.Abs(velocity.X) > 50 && HasPlatformInteraction()){
-				sprite.Play("running");
-			}
-			else if(HasPlatformInteraction()){
-				sprite.Play("idle");
-			}
-			else if (!hasJumped || (hasJumped && velocity.Y > 850)){
-				sprite.Play("falling");
-			}
-		}
-
-		Position = position;
-		Velocity = velocity;
-		//GD.Print("Velocity: ", velocity);
-		MoveAndSlide();
-		float leftBound = -GetViewportRect().Size.X / 2 + (hitbox.Shape.GetRect().Size.X) * Scale.X;
-		float rightBound = GetViewportRect().Size.X / 2 - (hitbox.Shape.GetRect().Size.X) * Scale.X;
-
-		position = Position;
-		if (position.X > rightBound)
-		{
-			position.X = rightBound;
-		}
-		else if (position.X < leftBound)
-		{
-			position.X = leftBound;
-		}
-		Position = position;
-	}
-	
-
+    }
+    private void GeneralPlatformInteraction(ref double delta)
+    {
+        _isJumping = false;
+        if (!IsOnFloor())
+        {
+            _bufferVelocity.Y += Gravity * (float)delta;
+        }
+        else
+        {
+            _coyoteFrameCount = 0;
+            _bufferVelocity.Y = 0;
+            for (int i = 0; i < GetSlideCollisionCount(); i++)
+            {
+                KinematicCollision2D collision = GetSlideCollision(i);
+                Node baseNode = (Node)collision.GetCollider();
+                int ID = 0;
+                bool isNumber = int.TryParse(baseNode.Name.ToString(), out ID);
+                if (isNumber)
+                { // Identifying collider
+                    _currentPlatform = (Platform)baseNode;
+                    _physicsState = PhysicsState.CLOUD_INTERACTION;
+                    _currentPlatform.BringToFront();
+                    _currentPlatform.interactingWithPlayer = true;
+                }
+            }
+        }
+    }
+    public void OnAreaEntered(Area2D area)
+    {
+        GD.Print("Area Name: ", area.Name);
+        if (area.Name.ToString().Substring(0, 5) == "Super")
+        {
+            _hasSuperJumped = true;
+        }
+        else if (!_isSuperJumping)
+        {
+            _isAlive = false;
+        }
+    }
+    private void Die()
+    {
+        if (_deathFrameCount == 0)
+        {
+            _physicsState = PhysicsState.NO_PHYSICS;
+            Velocity = new Godot.Vector2(0, 0);
+            _sprite.Play("die");
+        }
+        if (_deathFrameCount > DeathFrames)
+        {
+            Position = new Godot.Vector2(0, 0);
+            Velocity = new Godot.Vector2(0, 0);
+            _isAlive = true;
+            _deathFrameCount = 0;
+            _physicsState = PhysicsState.GENERAL_INTERACTION;
+            return;
+        }
+        _deathFrameCount++;
+    }
 }
