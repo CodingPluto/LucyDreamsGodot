@@ -55,8 +55,8 @@ public partial class Platform : StaticBody2D
 		}
 	}
 	public static void LoadDependantScenes(){
-		itemScenes[(int)ItemScenes.SPIKE] = (PackedScene)ResourceLoader.Load("res://Spike.tscn");
-		itemScenes[(int)ItemScenes.SUPERJUMP] = (PackedScene)ResourceLoader.Load("res://SuperJump.tscn");
+		itemScenes[(int)ItemScenes.SPIKE] = (PackedScene)ResourceLoader.Load("res://scenes/Spike.tscn");
+		itemScenes[(int)ItemScenes.SUPERJUMP] = (PackedScene)ResourceLoader.Load("res://scenes/SuperJump.tscn");
 		itemNames[(int)ItemScenes.SPIKE] = "Spike";
 		itemNames[(int)ItemScenes.SUPERJUMP] = "SuperJump"; // Can be automated with quick addition of child and then grab name and then removal.
 		itemGenerationWeights[(int)ItemScenes.SPIKE] = 10;

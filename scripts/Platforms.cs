@@ -35,7 +35,7 @@ public partial class Platforms : Node2D
 		rng.Randomize();
 
 		// Load the scene
-        scene = (PackedScene)ResourceLoader.Load("res://Platform.tscn");
+        scene = (PackedScene)ResourceLoader.Load("res://scenes/Platform.tscn");
 
 		generatePlatforms(STARTING_PLATFORM_COUNT);
 	}
