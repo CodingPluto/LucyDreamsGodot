@@ -1,71 +1,80 @@
 using Godot;
 using System;
+using System.Diagnostics;
 using System.Security.Cryptography;
 
 public partial class Platforms : Node2D
 {
-    private const int GENERATION_FRAMES = 5;
-    private static int IDOffset = 1;
-    private const int STARTING_PLATFORM_COUNT = 150; // make these values divisible of each other plz
-    private const int GENERATION_EACH_ITERATION = STARTING_PLATFORM_COUNT / GENERATION_FRAMES;
-    int currentGenerationFrame = 0;
-    bool generationMode = false;
-    // Called when the node enters the scene tree for the first time.
-    private Godot.RandomNumberGenerator rng = new Godot.RandomNumberGenerator();
-    private static Vector2 screenDimensions;
-    Lucy lucy;
-    PackedScene scene;
-    private void generatePlatforms(int count)
+    static readonly int GenerationFrames;
+    static readonly int StartingPlatformCount;
+    static readonly int GenerationEachIteration;
+    static readonly Godot.RandomNumberGenerator RNG;
+    static int IdOffset;
+    static Vector2 ScreenDimensions;
+    int _currentGenerationFrame;
+    Lucy _lucy;
+    PackedScene _scene;
+    bool _generationMode;
+    static Platforms()
     {
-        int i;
-        for (i = 0; i < count; ++i)
-        {
-            Node instance = scene.Instantiate();
-            AddChild(instance);
-            instance.Name = (i + IDOffset).ToString();
-        }
-        IDOffset += i;
+        GenerationFrames = 5;
+        StartingPlatformCount = 150;
+        GenerationEachIteration = StartingPlatformCount / GenerationFrames; // make these values divisible of each other plz
+        RNG = new Godot.RandomNumberGenerator();
+        Debug.Assert(RNG != null);
+        IdOffset = 1;
+    }
+    Platforms()
+    {
+        _currentGenerationFrame = 0;
+        _generationMode = false;
     }
     public override void _Ready()
     {
-        lucy = (Lucy)GetNode("../Lucy");
-
-        screenDimensions = GetViewportRect().Size;
-        Platform.setScreenDimensions(screenDimensions);
+        _lucy = (Lucy)GetNode("../Lucy");
+        Debug.Assert(_lucy != null);
+        _scene = (PackedScene)ResourceLoader.Load("res://scenes/Platform.tscn");
+        Debug.Assert(_scene != null);
         Platform.LoadCloudTextures();
         Platform.LoadDependantScenes();
-        rng.Randomize();
-
-        // Load the scene
-        scene = (PackedScene)ResourceLoader.Load("res://scenes/Platform.tscn");
-
-        generatePlatforms(STARTING_PLATFORM_COUNT);
+        RNG.Randomize();
+        ScreenDimensions = GetViewportRect().Size;
+        Platform.setScreenDimensions(ScreenDimensions);
+        generatePlatforms(StartingPlatformCount);
     }
-
-    // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(double delta)
     {
-        if (lucy.Position.Y < screenDimensions.Y / 2 + ((-screenDimensions.Y) * Platform.GenerationStage) && generationMode)
+        if (_lucy.Position.Y < ScreenDimensions.Y / 2 + ((-ScreenDimensions.Y) * Platform.GenerationStage) && _generationMode)
         {
-            generatePlatforms(GENERATION_EACH_ITERATION * (GENERATION_FRAMES - currentGenerationFrame));
-            generationMode = false;
-            currentGenerationFrame = 0;
+            generatePlatforms(GenerationEachIteration * (GenerationFrames - _currentGenerationFrame));
+            _generationMode = false;
+            _currentGenerationFrame = 0;
         }
-        if (lucy.Position.Y < screenDimensions.Y / 2 + ((-screenDimensions.Y) * Platform.GenerationStage) + screenDimensions.Y)
+        if (_lucy.Position.Y < ScreenDimensions.Y / 2 + ((-ScreenDimensions.Y) * Platform.GenerationStage) + ScreenDimensions.Y)
         {
             ++Platform.GenerationStage;
-            generationMode = true;
-            GD.Print("New generationStage: ", Platform.GenerationStage, " || Lucy Position: ", lucy.Position);
+            _generationMode = true;
         }
-        if (generationMode)
+        if (_generationMode)
         {
-            generatePlatforms(GENERATION_EACH_ITERATION);
-            currentGenerationFrame++;
-            if (currentGenerationFrame == GENERATION_FRAMES)
+            generatePlatforms(GenerationEachIteration);
+            _currentGenerationFrame++;
+            if (_currentGenerationFrame == GenerationFrames)
             {
-                generationMode = false;
-                currentGenerationFrame = 0;
+                _generationMode = false;
+                _currentGenerationFrame = 0;
             }
         }
+    }
+    private void generatePlatforms(int Count)
+    {
+        int Index;
+        for (Index = 0; Index < Count; ++Index)
+        {
+            Node Instance = _scene.Instantiate();
+            AddChild(Instance);
+            Instance.Name = (Index + IdOffset).ToString();
+        }
+        IdOffset += Index;
     }
 }

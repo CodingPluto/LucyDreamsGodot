@@ -15,8 +15,8 @@ public partial class Platform : StaticBody2D
     static readonly int UnloadDistanceStages;
     static Texture2D[,] TextureArray;
     static Godot.RandomNumberGenerator RNG;
-    static readonly int _imageCloudLengths;
-    static readonly int _imageCloudVariations;
+    static readonly int ImageCloudLengths;
+    static readonly int ImageCloudVariations;
     static String[] itemNames;
     static PackedScene[] itemScenes;
     static int[] itemGenerationWeights;
@@ -51,8 +51,8 @@ public partial class Platform : StaticBody2D
         UnloadDistanceStages = 2;
         TextureArray = new Texture2D[5, 3];
         RNG = new Godot.RandomNumberGenerator();
-        _imageCloudLengths = 5;
-        _imageCloudVariations = 3;
+        ImageCloudLengths = 5;
+        ImageCloudVariations = 3;
         GenerationStage = 1;
     }
     Platform()
@@ -71,9 +71,9 @@ public partial class Platform : StaticBody2D
 
     public static void LoadCloudTextures()
     {
-        for (int CloudLengthIndex = 0; CloudLengthIndex < _imageCloudLengths; ++CloudLengthIndex)
+        for (int CloudLengthIndex = 0; CloudLengthIndex < ImageCloudLengths; ++CloudLengthIndex)
         {
-            for (int CloudVariationIndex = 0; CloudVariationIndex < _imageCloudVariations; ++CloudVariationIndex)
+            for (int CloudVariationIndex = 0; CloudVariationIndex < ImageCloudVariations; ++CloudVariationIndex)
             {
                 TextureArray[CloudLengthIndex, CloudVariationIndex] = (Texture2D)GD.Load("res://assets/images/cloud" + (CloudLengthIndex + 1).ToString() + "/sprite_" + CloudVariationIndex.ToString() + ".png");
             }
@@ -103,9 +103,9 @@ public partial class Platform : StaticBody2D
         _sinDriftSpeed = RNG.RandfRange(0.01f, 0.04f);
         _sprite = GetNode<Sprite2D>("Sprite");
         _hitbox = GetNode<CollisionShape2D>("Hitbox");
-        int CloudLength = RNG.RandiRange(1, _imageCloudLengths);
+        int CloudLength = RNG.RandiRange(1, ImageCloudLengths);
         ((Node2D)_hitbox).Scale = new Godot.Vector2(CloudLength, 1);
-        _sprite.Texture = TextureArray[CloudLength - 1, RNG.RandiRange(0, _imageCloudVariations - 1)];
+        _sprite.Texture = TextureArray[CloudLength - 1, RNG.RandiRange(0, ImageCloudVariations - 1)];
         SpriteWidth = _sprite.GetRect().Size.X * Scale.X;
         SpriteHeight = _sprite.GetRect().Size.Y * Scale.Y;
         int XPosition = RNG.RandiRange(-(int)ScreenDimensions.X / 2, (int)ScreenDimensions.X / 2);
@@ -173,10 +173,11 @@ public partial class Platform : StaticBody2D
         }
         int TopOfScreen = (int)-ScreenDimensions.Y / 2;
         int Argument = TopOfScreen * (GenerationStage - UnloadDistanceStages);
+        /*
         if (BufferPosition.Y > Argument)
         {
             QueueFree();
-        }
+        }*/
         Position = BufferPosition;
     }
     public static void setScreenDimensions(Godot.Vector2 _screenDimensions)
