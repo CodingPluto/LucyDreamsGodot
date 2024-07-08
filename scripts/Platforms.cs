@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Diagnostics;
+using System.Numerics;
 using System.Security.Cryptography;
 
 public partial class Platforms : Node2D
@@ -9,16 +10,20 @@ public partial class Platforms : Node2D
     static readonly int StartingPlatformCount;
     static readonly int GenerationEachIteration;
     static readonly Godot.RandomNumberGenerator RNG;
+    static readonly int BackCloudsCount;
+    static public int Level;
     static int IdOffset;
-    static Vector2 ScreenDimensions;
+    static Godot.Vector2 ScreenDimensions;
     int _currentGenerationFrame;
     Lucy _lucy;
     PackedScene _scene;
+    PackedScene _backCloudScene;
     bool _generationMode;
     static Platforms()
     {
         GenerationFrames = 5;
         StartingPlatformCount = 150;
+        BackCloudsCount = 50;
         GenerationEachIteration = StartingPlatformCount / GenerationFrames; // make these values divisible of each other plz
         RNG = new Godot.RandomNumberGenerator();
         Debug.Assert(RNG != null);
@@ -26,6 +31,7 @@ public partial class Platforms : Node2D
     }
     Platforms()
     {
+        Level = 0;
         _currentGenerationFrame = 0;
         _generationMode = false;
     }
@@ -35,6 +41,14 @@ public partial class Platforms : Node2D
         Debug.Assert(_lucy != null);
         _scene = (PackedScene)ResourceLoader.Load("res://scenes/Platform.tscn");
         Debug.Assert(_scene != null);
+        _backCloudScene = (PackedScene)ResourceLoader.Load("res://scenes/BackCloud.tscn");
+        Debug.Assert(_backCloudScene != null);
+        for (int i = 0; i < BackCloudsCount; ++i)
+        {
+            var cloud = _backCloudScene.Instantiate();
+            AddChild(cloud);
+        }
+
         Platform.LoadCloudTextures();
         Platform.LoadDependantScenes();
         RNG.Randomize();
@@ -44,26 +58,14 @@ public partial class Platforms : Node2D
     }
     public override void _Process(double delta)
     {
-        if (_lucy.Position.Y < ScreenDimensions.Y / 2 + ((-ScreenDimensions.Y) * Platform.GenerationStage) && _generationMode)
+        if ((_lucy.Position.Y + _lucy.Hitbox.Shape.GetRect().Size.Y * Scale.Y) < -ScreenDimensions.Y / 2)
         {
-            generatePlatforms(GenerationEachIteration * (GenerationFrames - _currentGenerationFrame));
-            _generationMode = false;
-            _currentGenerationFrame = 0;
-        }
-        if (_lucy.Position.Y < ScreenDimensions.Y / 2 + ((-ScreenDimensions.Y) * Platform.GenerationStage) + ScreenDimensions.Y)
-        {
-            ++Platform.GenerationStage;
-            _generationMode = true;
-        }
-        if (_generationMode)
-        {
-            generatePlatforms(GenerationEachIteration);
-            _currentGenerationFrame++;
-            if (_currentGenerationFrame == GenerationFrames)
+            _lucy.SetPositionEndOfFrame(_lucy.Position.X, (ScreenDimensions.Y / 2) - 200);
+            if (_lucy.Velocity.Y > -200)
             {
-                _generationMode = false;
-                _currentGenerationFrame = 0;
+                _lucy.SetVelocityEndOfFrame(_lucy.Velocity.X,Lucy.JumpVelocity * 2);
             }
+            Level ++;
         }
     }
     private void generatePlatforms(int Count)

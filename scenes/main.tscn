@@ -2,16 +2,17 @@
 
 [ext_resource type="PackedScene" uid="uid://bupj7op8ubd3c" path="res://scenes/Lucy.tscn" id="1_mwo07"]
 [ext_resource type="PackedScene" uid="uid://c6gslu0f4q3h4" path="res://scenes/Platforms.tscn" id="2_dyi38"]
-[ext_resource type="PackedScene" uid="uid://de53vthmskh3f" path="res://scenes/background.tscn" id="3_per4w"]
+[ext_resource type="PackedScene" uid="uid://de53vthmskh3f" path="res://scenes/Background.tscn" id="3_per4w"]
 [ext_resource type="PackedScene" uid="uid://c2d1avnx3ncs7" path="res://scenes/BasePlatform.tscn" id="4_ms3k2"]
 
 [node name="main" type="Node2D"]
 
 [node name="Background" parent="." instance=ExtResource("3_per4w")]
 position = Vector2(0, 0)
-scale = Vector2(4, 4)
+metadata/_edit_lock_ = true
 
 [node name="Lucy" parent="." instance=ExtResource("1_mwo07")]
+position = Vector2(7, 462)
 
 [node name="Platforms" parent="." instance=ExtResource("2_dyi38")]
 

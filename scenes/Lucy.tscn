@@ -189,7 +189,7 @@ animations = [{
 size = Vector2(6.66667, 4.66667)
 
 [node name="Lucy" type="CharacterBody2D"]
-scale = Vector2(3, 3)
+scale = Vector2(2, 2)
 collision_mask = 62
 script = ExtResource("1_8mfc7")
 

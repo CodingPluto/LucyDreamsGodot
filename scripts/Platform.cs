@@ -97,7 +97,6 @@ public partial class Platform : StaticBody2D
             }
         }
     }
-
     public override void _Ready()
     {
         _sinDriftSpeed = RNG.RandfRange(0.01f, 0.04f);
@@ -109,7 +108,7 @@ public partial class Platform : StaticBody2D
         SpriteWidth = _sprite.GetRect().Size.X * Scale.X;
         SpriteHeight = _sprite.GetRect().Size.Y * Scale.Y;
         int XPosition = RNG.RandiRange(-(int)ScreenDimensions.X / 2, (int)ScreenDimensions.X / 2);
-        int YPosition = RNG.RandiRange(-(int)ScreenDimensions.Y / 2, (int)ScreenDimensions.Y / 2) - ((int)ScreenDimensions.Y * (GenerationStage - 1));
+        int YPosition = RNG.RandiRange(-(int)ScreenDimensions.Y / 2, (int)ScreenDimensions.Y / 2 - 140);
         Position = new Godot.Vector2(XPosition, YPosition);
         SinPoint = RNG.RandfRange(SineBottomBoundary, SineTopBoundary);
         DriftMultiplier = RNG.RandfRange(DriftMultiplierRNGBounds.X, DriftMultiplierRNGBounds.Y);
@@ -185,4 +184,3 @@ public partial class Platform : StaticBody2D
         ScreenDimensions = _screenDimensions;
     }
 }
-
