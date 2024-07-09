@@ -1,9 +1,11 @@
-[gd_scene load_steps=5 format=3 uid="uid://b4865m08oemcl"]
+[gd_scene load_steps=7 format=3 uid="uid://b4865m08oemcl"]
 
 [ext_resource type="PackedScene" uid="uid://bupj7op8ubd3c" path="res://scenes/Lucy.tscn" id="1_mwo07"]
 [ext_resource type="PackedScene" uid="uid://c6gslu0f4q3h4" path="res://scenes/Platforms.tscn" id="2_dyi38"]
 [ext_resource type="PackedScene" uid="uid://de53vthmskh3f" path="res://scenes/Background.tscn" id="3_per4w"]
 [ext_resource type="PackedScene" uid="uid://c2d1avnx3ncs7" path="res://scenes/BasePlatform.tscn" id="4_ms3k2"]
+[ext_resource type="AudioStream" uid="uid://dm4hn47gkk5tu" path="res://assets/euphoria.wav" id="5_65q00"]
+[ext_resource type="Script" path="res://scripts/music.cs" id="6_5wnp3"]
 
 [node name="main" type="Node2D"]
 
@@ -18,3 +20,9 @@ position = Vector2(7, 462)
 
 [node name="BasePlatform" parent="." instance=ExtResource("4_ms3k2")]
 position = Vector2(300, 515)
+
+[node name="SFX" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_65q00")
+volume_db = -10.0
+autoplay = true
+script = ExtResource("6_5wnp3")

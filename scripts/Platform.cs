@@ -124,31 +124,36 @@ public partial class Platform : StaticBody2D
         const int CloudCellWidth = 12;
         const int CloudCellHeight = 12;
         int ItemCellPosition = 0;
-        for (int Index = 0; Index < CloudLength; Index++)
+        int SpecialPlatformChance = 2 * (Platforms.Level);
+        itemGenerationWeights[(int)ItemScenes.SPIKE] = (int)(Math.Round((double)Platforms.Level + 20) * 1.5);
+        itemGenerationWeights[(int)ItemScenes.SUPERJUMP] = 100 - itemGenerationWeights[(int)ItemScenes.SPIKE];
+        if (SpecialPlatformChance > 0)
         {
-            if (RNG.RandiRange(1, 10) == 1)
+            for (int Index = 0; Index < CloudLength; Index++)
             {
-                ItemCellPosition = CloudCellWidth * Index;
-                int ItemPositioning = -CloudCellWidth * (CloudLength / 2) + ItemCellPosition;
-                if (CloudLength % 2 == 0)
+                if (RNG.RandiRange(100 - 100 / SpecialPlatformChance, 100) == 100)
                 {
-                    ItemPositioning += CloudCellWidth / 2;
-                }
-                float RandomGeneration = RNG.RandiRange(0, 100);
-                int ItemIndex = 0;
-                for (int j = 0; j < (int)ItemScenes.ITEMSCENES_LENGTH; ++j)
-                {
-                    if (RandomGeneration <= itemGenerationWeights[j])
+                    ItemCellPosition = CloudCellWidth * Index;
+                    int ItemPositioning = -CloudCellWidth * (CloudLength / 2) + ItemCellPosition;
+                    if (CloudLength % 2 == 0)
                     {
-                        ItemIndex = j;
-                        break;
+                        ItemPositioning += CloudCellWidth / 2;
                     }
+                    float RandomGeneration = RNG.RandiRange(0, 100);
+                    int ItemIndex = 0;
+                    for (int j = 0; j < (int)ItemScenes.ITEMSCENES_LENGTH; ++j)
+                    {
+                        if (RandomGeneration <= itemGenerationWeights[j])
+                        {
+                            ItemIndex = j;
+                            break;
+                        }
+                    }
+                    Area2D Item = (Area2D)itemScenes[ItemIndex].Instantiate();
+                    Item.Name = itemNames[ItemIndex] + Index.ToString();
+                    AddChild(Item);
+                    Item.Position = new Godot.Vector2(ItemPositioning, -CloudCellHeight);
                 }
-                Area2D Item = (Area2D)itemScenes[ItemIndex].Instantiate();
-
-                Item.Name = itemNames[ItemIndex] + Index.ToString();
-                AddChild(Item);
-                Item.Position = new Godot.Vector2(ItemPositioning, -CloudCellHeight);
             }
         }
 

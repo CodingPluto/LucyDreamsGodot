@@ -1,4 +1,4 @@
-[gd_scene load_steps=43 format=3 uid="uid://bupj7op8ubd3c"]
+[gd_scene load_steps=52 format=3 uid="uid://bupj7op8ubd3c"]
 
 [ext_resource type="Script" path="res://scripts/Lucy.cs" id="1_8mfc7"]
 [ext_resource type="Texture2D" uid="uid://dxd8mm7jectxv" path="res://assets/images/lucyAnimations/lucy_die/sprite_0.png" id="2_82vjm"]
@@ -39,9 +39,18 @@
 [ext_resource type="Texture2D" uid="uid://dvqs0s3s8aukh" path="res://assets/images/lucyAnimations/lucy_running/sprite_5.png" id="37_568dj"]
 [ext_resource type="Texture2D" uid="uid://c6mob168utlov" path="res://assets/images/lucyAnimations/lucy_running/sprite_6.png" id="38_hhlww"]
 [ext_resource type="Texture2D" uid="uid://bsm3ugr5v1s02" path="res://assets/images/lucyAnimations/lucy_running/sprite_7.png" id="39_gv3xs"]
+[ext_resource type="AudioStream" uid="uid://c1v1ue0j4mxhd" path="res://assets/death.wav" id="40_1i2ec"]
+[ext_resource type="Texture2D" uid="uid://c6pqmheffqcmq" path="res://assets/images/lucyAnimations/lucy_repulse/sprite_0.png" id="40_vo8gh"]
+[ext_resource type="AudioStream" uid="uid://xwpy0tv3im63" path="res://assets/superjump.wav" id="41_64dl5"]
+[ext_resource type="Texture2D" uid="uid://ct16py3y2otp7" path="res://assets/images/lucyAnimations/lucy_repulse/sprite_1.png" id="41_73rip"]
+[ext_resource type="Texture2D" uid="uid://v0yh6hlci3ck" path="res://assets/images/lucyAnimations/lucy_repulse/sprite_2.png" id="42_noi80"]
+[ext_resource type="Texture2D" uid="uid://3wtpeefrb77s" path="res://assets/images/lucyAnimations/lucy_repulse/sprite_3.png" id="43_ujqf3"]
+[ext_resource type="Texture2D" uid="uid://winet5y3qbhq" path="res://assets/images/lucyAnimations/lucy_repulse/sprite_4.png" id="44_j7ygj"]
+[ext_resource type="Texture2D" uid="uid://sfwidfkdg3qk" path="res://assets/images/lucyAnimations/lucy_repulse/sprite_5.png" id="45_uwmq6"]
+[ext_resource type="Texture2D" uid="uid://8i6we756x4ld" path="res://assets/images/lucyAnimations/lucy_repulse/sprite_6.png" id="46_ui0ap"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_thcv2"]
-size = Vector2(6.8, 20)
+size = Vector2(8, 20)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_wuk27"]
 animations = [{
@@ -72,7 +81,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"die",
-"speed": 16.0
+"speed": 14.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -183,6 +192,32 @@ animations = [{
 "loop": true,
 "name": &"running",
 "speed": 7.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("40_vo8gh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("41_73rip")
+}, {
+"duration": 1.0,
+"texture": ExtResource("42_noi80")
+}, {
+"duration": 1.0,
+"texture": ExtResource("43_ujqf3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("44_j7ygj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("45_uwmq6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("46_ui0ap")
+}],
+"loop": true,
+"name": &"super_jump",
+"speed": 7.0
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_sh6h7"]
@@ -194,12 +229,15 @@ collision_mask = 62
 script = ExtResource("1_8mfc7")
 
 [node name="Hitbox" type="CollisionShape2D" parent="."]
+position = Vector2(-1.19209e-07, 0)
 shape = SubResource("RectangleShape2D_thcv2")
 
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
 z_index = 5
 sprite_frames = SubResource("SpriteFrames_wuk27")
 animation = &"die"
+frame = 7
+frame_progress = 1.0
 offset = Vector2(-0.333, -1)
 
 [node name="Camera" type="Camera2D" parent="."]
@@ -212,5 +250,11 @@ collision_mask = 62
 [node name="Hitbox" type="CollisionShape2D" parent="Interactbox"]
 position = Vector2(-1.58946e-07, 7.66667)
 shape = SubResource("RectangleShape2D_sh6h7")
+
+[node name="DeathSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("40_1i2ec")
+
+[node name="SuperJumpSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("41_64dl5")
 
 [connection signal="area_entered" from="Interactbox" to="." method="OnAreaEntered"]
